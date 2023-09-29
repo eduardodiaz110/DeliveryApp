@@ -1,66 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { RootDrawerParamList } from "../modules/DrawerNavigator";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { api } from "../functions/api";
 
-interface Props {
+type CartNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
+
+type CartProps = {
   cartID: string | null;
   setCartID: React.Dispatch<React.SetStateAction<string | null>>;
-}
+};
 
-const Cart: React.FC<Props> = ({ cartID, setCartID }) => {
+const Cart: React.FC<CartProps> = ({ cartID, setCartID }) => {
   const [cart, setCart] = useState<any>(null);
+  const navigation = useNavigation<CartNavigationProp>();
 
-  const goToCheckout = async () => {
-    try {
-      const shop = "quickstart-b6a433cb"; // reemplaza esto con el nombre de tu tienda
-      const apiVersion = "2023-07"; // reemplaza esto con la versión de tu API
-      const accessToken = "a8d6e2c263a5de4291a7b1d942df975b"; // reemplaza esto con tu token de acceso
-
-      const response = await fetch(
-        `https://${shop}.myshopify.com/api/${apiVersion}/graphql.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Storefront-Access-Token": accessToken,
-          },
-          body: JSON.stringify({
-            query: `
-            query checkoutURL {
-                cart(id: "gid://shopify/Cart/c1-d3f9ac7c37c49fa7aaaf73ac89304f42") {
-                  checkoutUrl
-                }
-              }
-              
-          `,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      console.log(data.data.cart.checkoutUrl);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-
-  useEffect(() => {
+  // retrieve cart
+  useFocusEffect(() => {
     const retrieveCart = async () => {
       try {
-        const shop = "quickstart-b6a433cb"; // reemplaza esto con el nombre de tu tienda
-        const apiVersion = "2023-07"; // reemplaza esto con la versión de tu API
-        const accessToken = "a8d6e2c263a5de4291a7b1d942df975b"; // reemplaza esto con tu token de acceso
-
-        const response = await fetch(
-          `https://${shop}.myshopify.com/api/${apiVersion}/graphql.json`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Shopify-Storefront-Access-Token": accessToken,
-            },
-            body: JSON.stringify({
-              query: `
+        const query = `
               {
                 cart(
                     id: "${cartID}"
@@ -138,25 +99,40 @@ const Cart: React.FC<Props> = ({ cartID, setCartID }) => {
                     }
                   }
               }
-            `,
-            }),
-          }
-        );
+            `;
 
-        const data = await response.json();
+        const data = await api(query);
         if (!data) {
           return <Text>Loading...</Text>;
         }
 
         setCart(data.data);
-        console.log(cart);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-
     retrieveCart();
-  }, [cartID]);
+  });
+
+  const goToCheckout = async () => {
+    try {
+      const query = `
+      query checkoutURL {
+          cart(id: "${cartID}") {
+            checkoutUrl
+          }
+        }
+        
+    `;
+      const data = await api(query);
+      navigation.navigate("Checkout", {
+        checkoutUrl: data.data.cart.checkoutUrl,
+        timestamp: new Date().getTime(),
+      });
+    } catch (error) {
+      console.error("Error obteniendo datos:", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
