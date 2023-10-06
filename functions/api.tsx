@@ -1,5 +1,9 @@
+import * as SecureStore from "expo-secure-store";
+
 export const api = async function (query: any) {
   try {
+    const savedToken = await SecureStore.getItemAsync("userToken");
+
     const shop = process.env.EXPO_PUBLIC_API_URL;
     const apiVersion = process.env.EXPO_PUBLIC_API_VERSION;
     const accessToken = process.env.EXPO_PUBLIC_API_ACCESS_TOKEN_SECRET;
