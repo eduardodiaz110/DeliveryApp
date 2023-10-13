@@ -43,10 +43,8 @@ export default function ProductModal({
     const savedToken = await SecureStore.getItemAsync("userToken");
 
     if (!savedToken) {
-      console.log("no hay token");
       try {
         if (!cartID) {
-          console.log("no hay cartId");
           const query = `
           mutation {
             cartCreate(
@@ -78,7 +76,6 @@ export default function ProductModal({
           setModalVisible(false);
           navigation.navigate("Cart");
         } else {
-          console.log("hay cartId");
           const query = `
           mutation {
             cartLinesAdd(

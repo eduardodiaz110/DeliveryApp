@@ -13,14 +13,17 @@ import Account from "./screens/Account";
 import SignUp from "./screens/SignUp";
 import * as SecureStore from "expo-secure-store";
 import { AuthProvider, AuthContext } from "./auth/AuthContext";
-import { DrawerNavigator } from "./DrawerNavigator";
+import { Navigator } from "./Navigator";
+import { AppProvider } from "./AppContext";
 
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <DrawerNavigator />
-      </NavigationContainer>
+      <AppProvider>
+        <NavigationContainer>
+          <Navigator />
+        </NavigationContainer>
+      </AppProvider>
     </AuthProvider>
   );
 }

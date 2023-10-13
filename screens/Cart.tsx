@@ -14,15 +14,14 @@ import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { api } from "../functions/api";
 import * as SecureStore from "expo-secure-store";
+import { AppContext } from "../AppContext";
 
 type CartNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
 
-type CartProps = {
-  cartID: string | null;
-  setCartID: React.Dispatch<React.SetStateAction<string | null>>;
-};
+const Cart = () => {
+  const { products, cartID, cursor, setCartID, setCursor } =
+    React.useContext(AppContext);
 
-const Cart: React.FC<CartProps> = ({ cartID, setCartID }) => {
   const [cart, setCart] = useState<any>({ cart: { lines: { edges: [] } } });
 
   const navigation = useNavigation<CartNavigationProp>();
@@ -171,7 +170,6 @@ const Cart: React.FC<CartProps> = ({ cartID, setCartID }) => {
   `;
       const data = await api(queryCreateCheckout);
       const checkoutId = data.data.checkoutCreate.checkout.id;
-      console.log("checkoutId", checkoutId);
 
       const queryAssociateCustomer = `
       mutation {

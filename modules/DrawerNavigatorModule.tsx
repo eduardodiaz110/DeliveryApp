@@ -5,4 +5,5 @@ export type RootDrawerParamList = {
   Login: undefined;
   Account: undefined;
   SignUp: undefined;
+  Product: undefined;
 };
