@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { api } from "../functions/api";
 import * as SecureStore from "expo-secure-store";
 import { AuthContext } from "../auth/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { AppContext } from "../AppContext";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AuthStackParams } from "../Navigator";
 
-type LoginNavigationProp = DrawerNavigationProp<RootDrawerParamList, "SignUp">;
+const Cart = () => {
+  const navigation = useNavigation<StackNavigationProp<AuthStackParams>>();
 
-type LoginProps = {
-  setCartID: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-const Cart: React.FC<LoginProps> = ({ setCartID }) => {
-  const navigation = useNavigation<LoginNavigationProp>();
+  const { setCartID } = React.useContext(AppContext);
 
   const { isAuthenticated, setIsAuthenticated } = React.useContext(AuthContext);
 

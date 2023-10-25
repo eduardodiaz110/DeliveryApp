@@ -4,19 +4,15 @@ import { api } from "../functions/api";
 import * as SecureStore from "expo-secure-store";
 import { AuthContext } from "../auth/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
+import { AppContext } from "../AppContext";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AuthStackParams } from "../Navigator";
 
-type SigupNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Login">;
-
-type SingUp = {
-  setCartID: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-const SignUp: React.FC<SingUp> = ({ setCartID }) => {
-  const navigation = useNavigation<SigupNavigationProp>();
+const SignUp = () => {
+  const navigation = useNavigation<StackNavigationProp<AuthStackParams>>();
 
   const { isAuthenticated, setIsAuthenticated } = React.useContext(AuthContext);
+  const { setCartID } = React.useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

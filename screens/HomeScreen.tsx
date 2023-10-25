@@ -9,8 +9,8 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { Products } from "../modules/Products";
 import { api } from "../functions/api";
 import ProductModal from "./modals/ProductModal";
@@ -20,17 +20,18 @@ import {
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
-import { RootStackParams } from "../Navigator";
-import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParams, ShopStackParams } from "../Navigator";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { AppContext } from "../AppContext";
 
-type NavigationProps = StackScreenProps<RootStackParams, "HomeScreen">;
+export type Props = {
+  route: StackScreenProps<ShopStackParams, "HomeScreen">["route"];
+};
 
 const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProps["navigation"]>();
+  const navigation = useNavigation<StackNavigationProp<ShopStackParams>>();
 
   const { products, cartID, cursor, setCartID, setCursor } =
     React.useContext(AppContext);
@@ -284,7 +285,7 @@ const HomeScreen = () => {
               borderColor: "#ffd9ce",
             }}
             onPress={() =>
-              navigation.navigate("Product", { productData: node })
+              navigation.navigate("ProductScreen", { productData: node })
             }
           >
             <View style={{ width: "60%" }}>

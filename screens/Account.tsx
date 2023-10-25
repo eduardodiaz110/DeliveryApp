@@ -5,13 +5,12 @@ import * as SecureStore from "expo-secure-store";
 import { useFocusEffect } from "@react-navigation/native";
 import { AuthContext } from "../auth/AuthContext";
 import OrderModal from "./modals/OrderModal";
+import { AppContext } from "../AppContext";
 
-type CartProps = {
-  setCartID: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-const Account: React.FC<CartProps> = ({ setCartID }) => {
+const AccountScreen = () => {
   const { isAuthenticated, setIsAuthenticated } = React.useContext(AuthContext);
+
+  const { setCartID } = React.useContext(AppContext);
 
   const [orders, setOrders] = useState([]);
   const [orderData, setOrderDatatOrders] = useState([]);
@@ -112,7 +111,7 @@ const Account: React.FC<CartProps> = ({ setCartID }) => {
   );
 };
 
-export default Account;
+export default AccountScreen;
 
 const styles = StyleSheet.create({
   container: {

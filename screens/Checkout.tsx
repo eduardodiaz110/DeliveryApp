@@ -7,7 +7,7 @@ import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
 
 type CheckoutRouteProp = RouteProp<RootDrawerParamList, "Checkout">;
 
-const Checkout: React.FC = () => {
+const CheckoutScreen: React.FC = () => {
   const route = useRoute<CheckoutRouteProp>();
   const { checkoutUrl, timestamp } = route.params;
   const [randomNumber, setRandomNumber] = useState<number>(0);
@@ -33,4 +33,4 @@ const Checkout: React.FC = () => {
   );
 };
 
-export default Checkout;
+export default CheckoutScreen;

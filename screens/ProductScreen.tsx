@@ -12,21 +12,22 @@ import {
 } from "react-native";
 import { api } from "../functions/api";
 import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
 import * as SecureStore from "expo-secure-store";
-import { RootStackParams } from "../Navigator";
-import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParams, ShopStackParams } from "../Navigator";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { AppContext } from "../AppContext";
 
-type Props = StackScreenProps<RootStackParams, "Product">;
+export type Props = {
+  route: StackScreenProps<ShopStackParams, "ProductScreen">["route"];
+};
 
-const Product: React.FC<Props> = ({ route }) => {
+export const ProductScreen: React.FC<Props> = ({ route }) => {
   const { productData } = route.params;
   const { products, cartID, cursor, setCartID, setCursor } =
     React.useContext(AppContext);
 
-  const navigation = useNavigation<Props["navigation"]>();
+  const navigation = useNavigation<StackNavigationProp<ShopStackParams>>();
 
   const [quantity, setQuantity] = useState<number>(1);
   const [variant, setVariant] = useState<string | null>(
@@ -67,7 +68,7 @@ const Product: React.FC<Props> = ({ route }) => {
             `;
           const data = await api(query);
           setCartID(data.data.cartCreate.cart.id);
-          navigation.navigate("Cart");
+          navigation.navigate("CartScreen");
         } else {
           const query = `
               mutation {
@@ -90,7 +91,7 @@ const Product: React.FC<Props> = ({ route }) => {
             `;
           const data = await api(query);
           setCartID(data.data.cartLinesAdd.cart.id);
-          navigation.navigate("Cart");
+          navigation.navigate("CartScreen");
         }
       } catch (error) {
         console.error("Error obteniendo datos:", error);
@@ -128,7 +129,7 @@ const Product: React.FC<Props> = ({ route }) => {
             `;
           const data = await api(query);
           setCartID(data.data.cartCreate.cart.id);
-          navigation.navigate("Cart");
+          navigation.navigate("CartScreen");
         } else {
           const query = `
               mutation {
@@ -151,7 +152,7 @@ const Product: React.FC<Props> = ({ route }) => {
             `;
           const data = await api(query);
           setCartID(data.data.cartLinesAdd.cart.id);
-          navigation.navigate("Cart");
+          navigation.navigate("CartScreen");
         }
       } catch (error) {
         console.error("Error obteniendo datos:", error);
@@ -207,8 +208,6 @@ const Product: React.FC<Props> = ({ route }) => {
     </View>
   );
 };
-
-export default Product;
 
 const styles = StyleSheet.create({
   modalContainer: {

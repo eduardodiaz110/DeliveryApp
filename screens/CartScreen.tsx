@@ -7,24 +7,22 @@ import {
   Image,
   Button,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { RootDrawerParamList } from "../modules/DrawerNavigatorModule";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { api } from "../functions/api";
 import * as SecureStore from "expo-secure-store";
 import { AppContext } from "../AppContext";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { RootStackParams, ShopStackParams } from "../Navigator";
 
-type CartNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
-
-const Cart = () => {
+export const CartScreen = () => {
   const { products, cartID, cursor, setCartID, setCursor } =
     React.useContext(AppContext);
 
   const [cart, setCart] = useState<any>({ cart: { lines: { edges: [] } } });
 
-  const navigation = useNavigation<CartNavigationProp>();
+  const navigation = useNavigation<StackNavigationProp<ShopStackParams>>();
 
   // constantly retrieve cart
   useFocusEffect(() => {
@@ -143,7 +141,7 @@ const Cart = () => {
 
           const data = await api(query);
           console.log("invitado", data);
-          navigation.navigate("Checkout", {
+          navigation.navigate("CheckoutScreen", {
             checkoutUrl: data.data.cart.checkoutUrl,
             timestamp: new Date().getTime(),
           });
@@ -186,7 +184,7 @@ const Cart = () => {
     `;
 
       const associateData = await api(queryAssociateCustomer);
-      navigation.navigate("Checkout", {
+      navigation.navigate("CheckoutScreen", {
         checkoutUrl:
           associateData.data.checkoutCustomerAssociateV2.checkout.webUrl,
         timestamp: new Date().getTime(),
@@ -545,5 +543,3 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
-
-export default Cart;
